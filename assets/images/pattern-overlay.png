@@ -1,0 +1,14 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <pattern id="hotpot-pattern" x="0" y="0" width="50" height="50" patternUnits="userSpaceOnUse">
+      <!-- Hotpot icons -->
+      <circle cx="25" cy="25" r="20" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="2"/>
+      <circle cx="25" cy="25" r="15" fill="none" stroke="rgba(227,24,55,0.1)" stroke-width="2"/>
+      <!-- Steam detail -->
+      <path d="M25 5 Q30 0 25 -5" stroke="rgba(255,255,255,0.05)" fill="none"/>
+      <path d="M15 5 Q20 0 15 -5" stroke="rgba(255,255,255,0.05)" fill="none"/>
+      <path d="M35 5 Q40 0 35 -5" stroke="rgba(255,255,255,0.05)" fill="none"/>
+    </pattern>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#hotpot-pattern)"/>
+</svg> 
