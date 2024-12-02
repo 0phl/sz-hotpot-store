@@ -119,7 +119,6 @@ if (!isset($_SESSION['cart'])) {
 </head>
 <body class="d-flex flex-column min-vh-100">
     <?php include 'includes/header.php'; ?>
-
     <main class="flex-grow-1">
         <div class="container py-5">
             <h2 class="mb-4">Your Shopping List</h2>
@@ -157,14 +156,16 @@ if (!isset($_SESSION['cart'])) {
 
             <!-- Invoice Preview -->
             <div class="card mt-4" id="invoice-preview" style="display: none;">
-                <div class="card-header d-flex justify-content-between align-items-center">
+                <div class="card-header">
                     <h5 class="mb-0">Order Summary</h5>
-                    <button class="btn btn-outline-primary" onclick="captureInvoice()">
-                        <i class="bx bx-camera"></i> Capture Invoice
-                    </button>
                 </div>
                 <div class="card-body" id="invoice-content">
                     <!-- Invoice content will be generated here -->
+                </div>
+                <div class="card-footer text-end">
+                    <button class="btn btn-outline-primary" onclick="captureInvoice()">
+                        <i class="fas fa-camera"></i> Capture Invoice
+                    </button>
                 </div>
             </div>
 
@@ -173,7 +174,7 @@ if (!isset($_SESSION['cart'])) {
                 <button class="btn btn-secondary me-2" onclick="window.location.href='index.php#menu'">
                     Continue Shopping
                 </button>
-                <button class="btn btn-danger" id="generate-invoice-btn" onclick="generateInvoice()">
+                <button class="btn btn-danger" id="generate-invoice-btn" onclick="generateInvoice()" style="display: <?php echo isset($_SESSION['invoice_generated']) && $_SESSION['invoice_generated'] ? 'none' : 'inline-block'; ?>">
                     Generate Invoice
                 </button>
             </div>
@@ -181,7 +182,6 @@ if (!isset($_SESSION['cart'])) {
     </main>
 
     <?php include 'includes/footer.php'; ?>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

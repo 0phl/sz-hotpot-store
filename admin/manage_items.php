@@ -23,18 +23,18 @@ $result = $conn->query($sql);
     <link href="https://cdn.jsdelivr.net/npm/boxicons@2.0.7/css/boxicons.min.css" rel="stylesheet">
     <link href="assets/css/admin-style.css" rel="stylesheet">
 </head>
-<body>
+<body class="bg-light">
     <?php include 'includes/admin_header.php'; ?>
 
     <div class="container-fluid">
         <div class="row">
-            <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+            <nav class="col-md-3 col-lg-2 d-md-block bg-white sidebar collapse">
                 <?php include 'includes/admin_sidebar.php'; ?>
             </nav>
 
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2">Manage Menu Items</h1>
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center mb-4">
+                    <h1 class="h2 mb-0">Menu Items</h1>
                     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addItemModal">
                         <i class="bx bx-plus"></i> Add New Item
                     </button>
@@ -51,45 +51,51 @@ $result = $conn->query($sql);
                     </div>
                 <?php endif; ?>
 
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover">
-                        <thead>
-                            <tr>
-                                <th>Image</th>
-                                <th>Name</th>
-                                <th>Description</th>
-                                <th>Price</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php while ($item = $result->fetch_assoc()): ?>
-                            <tr>
-                                <td data-label="Image">
-                                    <img src="../<?php echo $item['image_path']; ?>" 
-                                         alt="<?php echo $item['name']; ?>"
-                                         class="img-thumbnail"
-                                         style="max-width: 50px;">
-                                </td>
-                                <td data-label="Name"><?php echo $item['name']; ?></td>
-                                <td data-label="Description"><?php echo substr($item['description'], 0, 100) . '...'; ?></td>
-                                <td data-label="Price">₱<?php echo number_format($item['price'], 2); ?></td>
-                                <td data-label="Actions" class="actions-column">
-                                    <button class="btn btn-sm btn-primary edit-item" 
-                                            data-id="<?php echo $item['id']; ?>"
-                                            data-bs-toggle="modal" 
-                                            data-bs-target="#editItemModal">
-                                        <i class="bx bx-edit"></i>
-                                    </button>
-                                    <button class="btn btn-sm btn-danger delete-item"
-                                            data-id="<?php echo $item['id']; ?>">
-                                        <i class="bx bx-trash"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <?php endwhile; ?>
-                        </tbody>
-                    </table>
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th style="width: 80px;">Image</th>
+                                        <th>Name</th>
+                                        <th>Description</th>
+                                        <th style="width: 120px;">Price</th>
+                                        <th style="width: 100px;">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php while ($item = $result->fetch_assoc()): ?>
+                                    <tr>
+                                        <td>
+                                            <img src="../<?php echo $item['image_path']; ?>" 
+                                                 alt="<?php echo $item['name']; ?>"
+                                                 class="rounded"
+                                                 style="width: 50px; height: 50px; object-fit: cover;">
+                                        </td>
+                                        <td class="fw-medium"><?php echo $item['name']; ?></td>
+                                        <td class="text-muted"><?php echo substr($item['description'], 0, 100) . '...'; ?></td>
+                                        <td class="fw-medium">₱<?php echo number_format($item['price'], 2); ?></td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <button class="btn btn-sm btn-outline-primary edit-item" 
+                                                        data-id="<?php echo $item['id']; ?>"
+                                                        data-bs-toggle="modal" 
+                                                        data-bs-target="#editItemModal">
+                                                    <i class="bx bx-edit"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-danger delete-item"
+                                                        data-id="<?php echo $item['id']; ?>">
+                                                    <i class="bx bx-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <?php endwhile; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </main>
         </div>

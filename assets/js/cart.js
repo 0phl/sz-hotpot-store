@@ -1,6 +1,16 @@
 document.addEventListener('DOMContentLoaded', function() {
     loadCart();
+    updateButtonStates();
+    
+    // Check if invoice preview is visible
+    const invoicePreview = document.getElementById('invoice-preview');
+    if (invoicePreview && invoicePreview.style.display === 'block') {
+        invoiceGenerated = true;
+        updateButtonStates();
+    }
 });
+
+let invoiceGenerated = false;
 
 function loadCart() {
     fetch('actions/get_cart.php')
@@ -17,6 +27,7 @@ function loadCart() {
                     </div>`;
                 generateInvoiceBtn.disabled = true;
                 document.getElementById('customer-info').style.display = 'none';
+                updateButtonStates();
                 return;
             }
 
@@ -36,7 +47,7 @@ function loadCart() {
                             </thead>
                             <tbody>
                                 ${data.items.map(item => `
-                                    <tr>
+                                    <tr class="cart-item">
                                         <td>${item.name}</td>
                                         <td><img src="${item.image_path}" alt="${item.name}" style="height: 50px; width: 50px; object-fit: cover;"></td>
                                         <td>₱${parseFloat(item.price).toFixed(2)}</td>
@@ -61,7 +72,7 @@ function loadCart() {
                 </div>
                 <div class="d-md-none">
                     ${data.items.map(item => `
-                        <div class="card mb-3">
+                        <div class="card mb-3 cart-item">
                             <div class="card-body">
                                 <div class="row align-items-center">
                                     <div class="col-4">
@@ -90,6 +101,8 @@ function loadCart() {
 
             document.getElementById('cart-total').textContent = data.total.toFixed(2);
             generateInvoiceBtn.disabled = false;
+            generateInvoiceBtn.style.display = invoiceGenerated ? 'none' : 'inline-block';
+            updateButtonStates();
         });
 }
 
@@ -108,6 +121,8 @@ function updateQuantity(itemId, newQuantity) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
+            invoiceGenerated = false;
+            updateButtonStates();
             loadCart(); // Reload the cart to show updated quantities
         } else {
             alert(data.message || 'Error updating quantity');
@@ -148,6 +163,8 @@ function removeFromCart(itemId) {
                         timer: 1500,
                         showConfirmButton: false
                     });
+                    invoiceGenerated = false;
+                    updateButtonStates();
                     loadCart(); // Reload the cart to show the item has been removed
                 } else {
                     Swal.fire({
@@ -171,9 +188,31 @@ function removeFromCart(itemId) {
     });
 }
 
+function updateButtonStates() {
+    const generateInvoiceBtn = document.getElementById('generate-invoice-btn');
+    const cartItems = document.querySelectorAll('#cart-items .cart-item');
+    
+    if (generateInvoiceBtn) {
+        generateInvoiceBtn.disabled = cartItems.length === 0 || invoiceGenerated;
+        generateInvoiceBtn.style.display = invoiceGenerated ? 'none' : 'inline-block';
+    }
+}
+
 function generateInvoice() {
+    if (invoiceGenerated) {
+        return;
+    }
+
+    const generateInvoiceBtn = document.getElementById('generate-invoice-btn');
+    if (generateInvoiceBtn) {
+        generateInvoiceBtn.style.display = 'none';
+    }
+
     const customerName = document.getElementById('customer_name').value;
     if (!customerName) {
+        if (generateInvoiceBtn) {
+            generateInvoiceBtn.style.display = 'inline-block'; // Show button again if validation fails
+        }
         Swal.fire({
             title: 'Name Required',
             text: 'Please enter your name to generate the invoice.',
@@ -194,16 +233,13 @@ function generateInvoice() {
     const invoiceContent = document.getElementById('invoice-content');
     const cartTotal = document.getElementById('cart-total').textContent;
     
-    // Get cart items data
     fetch('actions/get_cart.php')
         .then(response => response.json())
         .then(data => {
-            // Get optional field values
             const phone = document.getElementById('customer_phone').value;
             const address = document.getElementById('delivery_address').value;
             const notes = document.getElementById('notes').value;
 
-            // Create customer info rows based on filled fields
             const customerInfoRows = [`
                 <tr>
                     <td><strong>Name:</strong></td>
@@ -298,13 +334,16 @@ function generateInvoice() {
                     </div>
                 </div>`;
 
-            // Show the invoice preview
+            invoiceGenerated = true;
+            if (generateInvoiceBtn) {
+                generateInvoiceBtn.disabled = true;
+                generateInvoiceBtn.style.display = 'none';
+            }
+
             document.getElementById('invoice-preview').style.display = 'block';
             
-            // Scroll to invoice
             document.getElementById('invoice-preview').scrollIntoView({ behavior: 'smooth' });
 
-            // Show success message
             Swal.fire({
                 title: 'Invoice Generated!',
                 text: 'Your invoice has been generated successfully. You can now capture it or continue shopping.',
@@ -327,7 +366,6 @@ async function captureInvoice() {
     const invoiceElement = document.getElementById('invoice-content');
     
     try {
-        // Show loading message
         Swal.fire({
             title: 'Generating Invoice...',
             text: 'Please wait while we prepare your invoice',
@@ -338,7 +376,6 @@ async function captureInvoice() {
             }
         });
 
-        // Hide buttons during capture
         const buttons = invoiceElement.querySelectorAll('button');
         buttons.forEach(button => button.style.display = 'none');
 
@@ -348,23 +385,18 @@ async function captureInvoice() {
             backgroundColor: '#ffffff'
         });
         
-        // Show buttons again
         buttons.forEach(button => button.style.display = '');
 
-        // Create download link
         const link = document.createElement('a');
         link.download = 'S&Z-Hotpot-Invoice.png';
         link.href = canvas.toDataURL('image/png');
         
-        // Trigger download
         link.click();
 
-        // Mark order as completed
         const response = await fetch('actions/complete_order.php');
         const data = await response.json();
 
         if (data.success) {
-            // Show success message and redirect
             await Swal.fire({
                 icon: 'success',
                 title: 'Order Completed!',
@@ -373,7 +405,6 @@ async function captureInvoice() {
                 timer: 2000
             });
 
-            // Redirect to success page
             window.location.href = 'order-success.php';
         }
     } catch (error) {
