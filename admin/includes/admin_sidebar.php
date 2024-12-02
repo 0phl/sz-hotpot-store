@@ -5,5 +5,10 @@
                 <i class="bx bxs-food-menu"></i> Manage Menu
             </a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" href="../index.php" target="_blank">
+                <i class='bx bx-home'></i> View Homepage
+            </a>
+        </li>
     </ul>
-</div> 
+</div>
