@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Fill the edit modal with item data
             document.getElementById('edit_item_id').value = itemId;
-            document.getElementById('edit_name').value = row.querySelector('td:nth-child(2)').textContent.trim();
+            document.getElementById('edit_name').value = row.querySelector('.item-name').textContent.trim();
             document.getElementById('edit_description').value = row.querySelector('td:nth-child(3)').textContent.replace('...', '').trim();
             document.getElementById('edit_price').value = row.querySelector('td:nth-child(4)').textContent.replace('₱', '').replace(',', '').trim();
             document.getElementById('current_image').src = row.querySelector('img').src;
