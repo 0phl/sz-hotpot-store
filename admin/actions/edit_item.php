@@ -4,8 +4,15 @@ require_once '../../includes/config.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $item_id = intval($_POST['item_id']);
-    $name = $conn->real_escape_string($_POST['name']);
-    $description = $conn->real_escape_string($_POST['description']);
+    // Add length validation
+    if (strlen($_POST['name']) > 100) { // Assuming 100 is your column's length
+        $_SESSION['message'] = "Item name is too long. Maximum 100 characters allowed.";
+        $_SESSION['message_type'] = "danger";
+        header('Location: ../manage_items.php');
+        exit;
+    }
+    $name = $conn->real_escape_string(trim($_POST['name']));
+    $description = $conn->real_escape_string(trim($_POST['description']));
     $price = floatval($_POST['price']);
     
     // Start with basic SQL query

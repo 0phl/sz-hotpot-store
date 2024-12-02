@@ -15,6 +15,9 @@
     padding-top: .5rem;
     overflow-x: hidden;
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 .navbar-brand {
@@ -45,4 +48,19 @@
 
 .nav-link i {
     margin-right: .5rem;
+}
+
+.nav-main {
+    flex-grow: 1;
+}
+
+.nav-bottom {
+    margin-top: auto;
+    padding-bottom: 1rem;
+}
+
+@media (max-width: 768px) {
+    .sidebar.show .nav-bottom {
+        padding-bottom: 2rem;
+    }
 } 

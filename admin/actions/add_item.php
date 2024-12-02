@@ -3,8 +3,8 @@ session_start();
 require_once '../../includes/config.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name = $conn->real_escape_string($_POST['name']);
-    $description = $conn->real_escape_string($_POST['description']);
+    $name = $conn->real_escape_string(trim($_POST['name']));
+    $description = $conn->real_escape_string(trim($_POST['description']));
     $price = floatval($_POST['price']);
     
     // Handle image upload
